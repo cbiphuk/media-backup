@@ -4,9 +4,12 @@ import os
 import re
 import shutil
 
-source_folder='/Users/cbiphuk/Dropbox-personal/Dropbox/Camera Uploads'
-dest_folder='/Volumes/Elements/BackupFromDropbox/mine'
+#source_folder='/Users/cbiphuk/Dropbox-personal/Dropbox/Camera Uploads'
+#dest_folder='/Volumes/Elements/BackupFromDropbox/mine'
 
+
+source_folder='/Users/cbiphuk/myprojects/media-backup/source'
+dest_folder='/Users/cbiphuk/myprojects/media-backup/dest'
 
 #source_folder='/Users/cbiphuk/Dropbox-personal/Dropbox/Camera Uploads from Iryna'
 #dest_folder='/Volumes/Elements/BackupFromDropbox/Iryna'
@@ -29,8 +32,20 @@ def create_folder_by_filename(filename):
 def move_file(filename):
     folder_name = create_folder_by_filename(filename)
     if folder_name is not None:
-        print("Moving file: ", filename)
-        shutil.move(source_folder+'/'+filename, dest_folder+'/'+ folder_name+'/'+filename)
+        #Ensure file does not exist in dest folder
+
+        if not os.path.exists(dest_folder+'/'+folder_name+'/'+filename):
+            print("Moving file: ", filename)
+            shutil.move(source_folder+'/'+filename, dest_folder+'/'+ folder_name+'/'+filename)
+        else:
+            destfile = filename
+            prefix = 0
+            while True:
+                prefix += 1
+                destfile = filename + '_' + str(prefix)
+                if not os.path.exists(dest_folder+'/'+folder_name+'/'+ destfile):
+                    break
+            shutil.move(source_folder+'/'+filename, dest_folder+'/'+ folder_name+'/'+destfile)
     else:
         print ("lazha")
 
@@ -42,5 +57,3 @@ def move_all_files(source_folder):
 
 if __name__ == '__main__':
     move_all_files(source_folder)
-
-
